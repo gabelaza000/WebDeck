@@ -1,7 +1,0 @@
-LICENSE
-README.md
-setup.py
-WebDeck.egg-info/PKG-INFO
-WebDeck.egg-info/SOURCES.txt
-WebDeck.egg-info/dependency_links.txt
-WebDeck.egg-info/top_level.txt
