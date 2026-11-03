@@ -22,6 +22,63 @@ The WebDeck is an application that allows the user to control their computer fro
 
 4. There is nothing to install on your mobile device, you simply need to scan the QR code by clicking on the tray icon.
 
+<<<<<<< HEAD
+### Running from source and connecting a phone
+
+When running WebDeck from the source directory, use the same local network for the
+computer and the phone:
+
+1. Open a terminal in the WebDeck source directory.
+2. Create and activate a virtual environment:
+   `python -m venv .venv`
+   `.venv\Scripts\activate`
+3. Install the dependencies:
+   `python -m pip install -r requirements.txt`
+4. Start WebDeck without the administrator elevation prompt:
+   `python run.py --no-admin`
+5. On the computer, open the WebDeck tray menu and choose the QR-code option.
+   Scan it with the phone, or open the displayed address manually. The address
+   must use the computer's Wi-Fi IPv4 address (for example,
+   `http://192.168.1.25:59997/`), not `localhost` or `127.0.0.1`.
+
+If the page does not load, confirm that the phone is on the same Wi-Fi network,
+allow Python/WebDeck through Windows Defender Firewall on private networks, and
+check that WebDeck is listening on the displayed port. Do not use a guest
+Wi-Fi network that blocks communication between devices.
+=======
+### Running from source and connecting from a phone
+
+The computer and phone must be connected to the same Wi-Fi or wired LAN. A
+guest Wi-Fi network, mobile hotspot isolation, VPN, or a network marked
+Public by Windows can prevent the phone from reaching the computer.
+
+From a PowerShell window in the WebDeck project directory, run:
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python run.py --no-admin --host 0.0.0.0
+```
+
+Find the computer's IPv4 address with `ipconfig` (for example,
+`192.168.1.25`), then open `http://192.168.1.25:59997/` on the phone. The
+port is `59997` by default; use the port shown by WebDeck if it was changed
+in the tray menu or with `--port`.
+
+`--no-admin` prevents WebDeck from requesting administrator privileges. It
+cannot create a Windows Firewall exception. If the phone cannot connect,
+allow Python (or the built `WebDeck.exe`) through **Windows Defender Firewall**
+on **Private networks**, or run WebDeck once without `--no-admin` when
+automatic firewall bypass is enabled in the WebDeck settings. Do not enable
+the firewall rule for Public networks.
+
+If the QR code contains an address from a VPN or another disconnected
+adapter, use the LAN IPv4 address from `ipconfig` manually. The `--host
+0.0.0.0` option makes the server listen on all local interfaces; WebDeck
+still rejects requests outside its configured local network.
+>>>>>>> 161cfcc (fixed server)
+
 
 ## How do I change the language of use?
 

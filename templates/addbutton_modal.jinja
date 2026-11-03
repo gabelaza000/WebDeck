@@ -45,13 +45,13 @@
                       
                     <script>
                       document.getElementById("submitButton").addEventListener("click", function(event) {
-                        event.preventDefault(); // Empêche le comportement par défaut du bouton
+                        event.preventDefault(); // Prevent default button behavior
                       
-                        // Récupérer la valeur du champ "folderName"
+                        // Retrieve the value of the "folderName" field
                         var folderName = document.getElementById("folderName").value;
                         if (folderName.trim() !== '') {
                         
-                          // Créer un objet JSON avec la valeur
+                          //Create a JSON object with the value
                           var parent_folder_id = document.querySelector('.buttons-center:not(.invisible)');
                           const parent_folder = parent_folder_id.id.replace(/^folder-/, '');
               
@@ -61,7 +61,7 @@
                             };
                           console.log(data)
                         
-                          // Envoyer la requête POST avec les données JSON
+                          // Send POST request with JSON data
                           fetch("/create_folder", {
                             method: "POST",
                             headers: {
@@ -79,14 +79,14 @@
                           .then(function(data) {
                             if (data && data.hasOwnProperty('success')) {
                               if (data.success) {
-                                // Faire quelque chose si la valeur de "success" est True
+                                // Do something if "success" is True
                                 console.log(`{{text("folder_created_successfully")}}`);
               
-                                // Sélectionnez toutes les divs avec la classe "webdeck_foldername_ALL"
+                                // Select all divs with class "webdeck_foldername_ALL"
                                 var divs = document.querySelectorAll('.webdeck_foldername_ALL');
                                 
                                 divs.forEach(function(div) {
-                                  // Créez un élément div
+                                  // Create a div element
                                   var newDiv = document.createElement('div');
                                   newDiv.setAttribute('class', 'webdeck_foldername');
                                 
@@ -97,8 +97,8 @@
                                   input.setAttribute('value', folderName);
                                   input.setAttribute('required', '');
                                 
-                                  // Créez un élément label
-                                  var label = document.createElement('label');
+                                  // Create a label element
+                                  var label = document.createElement('Label');
                                   label.setAttribute('for', folderName);
                                   label.textContent = folderName;
                                 
@@ -312,6 +312,17 @@
               
               <label for="button-text-input_{{arg_modal_ID}}"> {{text('button_title')}}: </label>
               <input type="text" id="button-text-input_{{arg_modal_ID}}" class="{{dark_theme}}" placeholder="{{ button_name }}">
+              <div id="hotkey-modifiers-container" style="margin-top: 10px; display: block;">
+                  <label style="font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" id="mod-ctrl-{{ arg_modal_ID }}"> Ctrl
+                  </label>
+                  <label style="margin-left: 15px; font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" id="mod-shift-{{ arg_modal_ID }}"> Shift
+                  </label>
+                  <label style="margin-left: 15px; font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" id="mod-alt-{{ arg_modal_ID }}"> Alt
+                  </label>
+              </div>
             </div>
           </div>
 
@@ -362,6 +373,27 @@
                           input.value = input.value.replaceAll('"', '');
                         }
                         return input.value; // Extract the value from the input element
+                    }
+                    if (command === 'Hotkey') {
+                      var ctrlChecked = document.getElementById('mod-ctrl-' + arg_modal_ID).checked;
+                      var shiftChecked = document.getElementById('mod-shift-' + arg_modal_ID).checked;
+                      var altChecked = document.getElementById('mod-alt-' + arg_modal_ID).checked;
+
+                      var primaryKeyInput = document.getElementById('hotkey-input-' + arg_modal_ID);
+                      var primaryKey = primaryKeyInput ? primaryKeyInput.value.trim() : "";
+
+                      var keyCombination = [];
+                      if (ctrlChecked) keyCombination.push('ctrl');
+                      if (shiftChecked) keyCombination.push('shift');
+                      if (altChecked) keyCombination.push('alt');
+
+                      if (primaryKey !== "") {
+                          keyCombination.push(primaryKey);
+                      }
+
+                      var finalHotkeyCommand = keyCombination.join('+');
+
+                      return "/obs_key " + finalHotkeyCommand;
                     }
                 }).filter(function(value) {
                     return value !== ''; // Filter out empty values

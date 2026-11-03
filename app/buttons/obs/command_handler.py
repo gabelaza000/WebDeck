@@ -9,6 +9,7 @@ import app.buttons.obs.scenes as scene
 import app.buttons.obs.recording as recording
 import app.buttons.obs.streaming as stream
 import app.buttons.obs.virtualcam as virtualcam
+import json
 
 
 #    https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md
@@ -81,17 +82,52 @@ def handle_command(message):
     
     
     elif message.startswith("/obs_key"):
-        hotkey = message.split(' ')[-1]
-        
-
-        
-        result = obs.call(obsrequests.TriggerHotkeyByKeySequence(keyId="OBS_KEY_"+hotkey,
-                                              keyModifiers=[]))
-        if "failed" in str(result):
-            log.error(f"Failed to trigger hotkey '{hotkey}': {result}")
-            raise RuntimeError(f"{text('failed')} :/")
-        log.success(f"Hotkey triggered '{hotkey}' successfully.")
-
+        raw_combination = message.split(' ')[-1]
+        parts = raw_combination.split('+')
     
+        # Initialize separate modifier states
+        ctrl_flag = False
+        shift_flag = False
+        alt_flag = False
+    
+        primary_key = ""
+    
+        for part in parts:
+            clean_part = part.strip().lower()
+            if clean_part == 'ctrl':
+                ctrl_flag = True
+            elif clean_part == 'shift':
+                shift_flag = True
+            elif clean_part == 'alt':
+                alt_flag = True
+            elif clean_part != "":
+                primary_key = clean_part.upper()
+
+        formatted_key = f"OBS_KEY_{primary_key}"
+
+        # Build the strict literal JSON payload format required by OBS Studio v5 core
+        # op: 6 represents a Request payload in the OBS WebSocket v5 protocol
+        raw_request = {
+            "op": 6,
+            "d": {
+                "requestType": "TriggerHotkeyByKeySequence",
+                "requestId": "webdeck_hotkey_trigger",
+                "requestData": {
+                    "keyId": formatted_key,
+                    "keyModifiers": {
+                        "shift": shift_flag,
+                        "control": ctrl_flag,
+                        "alt": alt_flag
+                    }
+                }
+            }
+        }
+
+        # Convert the payload to a JSON string string and send it via the library's internal client socket
+        obs.ws.send(json.dumps(raw_request))
+    
+        log.success(f"Hotkey combination '{raw_combination}' sent successfully to OBS.")
+
+
 
     obs.disconnect()

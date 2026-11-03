@@ -1,32 +1,43 @@
-# configuration files
+# User-specific configuration and data
 config.json
+data.json
 temp.json
 temp/*
+.config/
 .vscode/settings.json
-.config/user_uploads
-.config/themes
-.config/plugins
 
-# virtual environment directory
-venv
+# Python virtual environments and packaging metadata
+venv/
+.venv/
+env/
+ENV/
+*.egg-info/
 
-# compiled files
+# Build and compiled output
 build/
 dist/
 *.dll
 *.exe
 
-# Python bytecode
+# Python cache and tooling output
 __pycache__/
+*.py[cod]
+*$py.class
 .cache-*
-*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# backup files
+# Logs and operating-system files
+.logs/
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Backup files
 *copy.*
 !copy.png
 
-# misc
-.logs/*
-.DS_Store
+# Local-only test data
 tests/*
-data.json

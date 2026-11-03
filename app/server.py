@@ -534,12 +534,16 @@ log.info(f"Local IP address detected: {local_ip}")
 
 def run_server():
     change_server_state(1)
+    # The development server must use the same host override as the Flask
+    # server. This is needed when the detected interface is not reachable
+    # from the phone (for example, when a VPN is active).
+    server_host = get_arg("host") or local_ip
     if config["settings"].get("server") == "werkzeug" and not getattr(sys, "frozen", False):
-        server = make_server(local_ip, get_port(), app)
+        server = make_server(server_host, get_port(), app)
         server.serve_forever()
     else:
         app.run(
-            host=get_arg("host") or local_ip,
+            host=server_host,
             port=get_port(),
             debug=config["settings"].get("flask_debug"),
             use_reloader=config["settings"].get("flask_reloader", False),

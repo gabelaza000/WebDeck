@@ -9,7 +9,7 @@ from .exit import exit_program
 
 temp_file = os.path.join("temp", "webdeck_args.json")
 args = {}
-raw_args = [arg for arg in sorted(sys.argv[1:]) if not (arg.endswith('.pyc') or arg.endswith('library.zip'))]
+raw_args = [arg for arg in sys.argv[1:] if not (arg.endswith('.pyc') or arg.endswith('library.zip'))]
 # log.debug(f"{raw_args=}")
 
 available_args = {

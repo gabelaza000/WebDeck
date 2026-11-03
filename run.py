@@ -1,3 +1,4 @@
+
 import ctypes
 import sys
 import os.path
@@ -48,10 +49,11 @@ import app.utils.languages as languages
 
 
 def run_server_thread():
-    from app.server import run_server
     try:
+        from app.server import run_server
         run_server()
     except Exception as e:
+        log.exception(e, "Failed to start WebDeck server", expected=False)
         show_error(exception=e)
 
 def initialize_tray_icon():
