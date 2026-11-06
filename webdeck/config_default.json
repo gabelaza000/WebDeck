@@ -1,5 +1,6 @@
 {
     "settings": {
+        "prevent_screen_lock": false,
         "language": "system",
         "show_popup": true,
         "windows_startup": false,

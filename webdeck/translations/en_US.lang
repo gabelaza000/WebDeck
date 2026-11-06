@@ -153,6 +153,7 @@ no_changes_to_undo=There are no changes to undo.
 configuration=Configuration
 settings=Settings
 
+prevent_screen_lock=Keep screen awake (prevent sleep)
 see_patchnotes=See patchnotes
 github_issue=Report an issue on GitHub
 
